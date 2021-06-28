@@ -75,7 +75,7 @@ python3 local/defense.py \
 
 ## Citation
 
-Please cite our paper if you make use of the code.
+If you think this work helps your research or use the code, please consider reference our paper. Thank you!
 
 ```
 @article{wu2021voting,
