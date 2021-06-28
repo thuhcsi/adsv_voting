@@ -1,5 +1,8 @@
 # voting for the right answer
 
+* [audio samples](https://zyzisyz.github.io/voting_audio_samples/)
+* [arxiv paper](https://arxiv.org/abs/2106.07868)
+
 ## installation
 
 ```bash
