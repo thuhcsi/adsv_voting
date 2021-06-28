@@ -1,4 +1,4 @@
-# voting
+# voting for the right answer
 
 ## installation
 
