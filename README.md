@@ -4,7 +4,7 @@
 * [arxiv paper](https://arxiv.org/abs/2106.07868)
 
 <center>
-![alt png](docs/workflow.png "voting for the right answer")
+![](docs/workflow.png)
 </center>
 
 ## installation
