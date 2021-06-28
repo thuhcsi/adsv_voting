@@ -16,3 +16,12 @@ cd ..
 cp -r torch_speaker/{tools,scripts} .
 ```
 
+## experiments
+
+### stage 1: data preparation
+
+### stage 2: ASV model evaluation
+
+### stage 3: adversarial attack and examples generation
+
+### stage 4: voting for the defense
