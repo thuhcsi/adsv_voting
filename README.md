@@ -59,7 +59,7 @@ python3 tools/evaluate.py \
 			--checkpoint_path $checkpoint_path
 ```
 
-***stage 5: voting for the defense***
+**stage 5:** voting for the defense
 
 ```bash
 python3 local/defense.py \
