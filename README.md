@@ -32,7 +32,7 @@ python3 scripts/format_trials.py \
 			--dst_trials_path data/vox1.txt
 ```
 
-### stage 2: ASV model evaluation
+### stage 2: ASV model evaluation in raw audio
 
 ```bash
 python3 tools/evaluate.py \
@@ -50,7 +50,16 @@ python3 local/attack.py \
 			--checkpoint_path $checkpoint_path
 ```
 
-### stage 4: voting for the defense
+### stage 4: ASV model evaluation in adversarial examples
+
+```bash
+python3 tools/evaluate.py \
+			--config config/voting.yaml \
+			--trial_path data/vox1.txt \
+			--checkpoint_path $checkpoint_path
+```
+
+### stage 5: voting for the defense
 
 ```bash
 python3 local/defense.py \

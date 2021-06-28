@@ -27,7 +27,7 @@ class Adversarial_Attack_Helper(object):
         self.adv_save_dir = adv_save_dir
         self.trial_path = trial_path
         self.trials = np.loadtxt(trial_path, str)
-        self.adv_trials_path = os.path.join(adv_save_dir, "adv_trials.lst")
+        self.adv_trials_path = os.path.join(adv_save_dir, "adv_trials.txt")
         self.device = device
 
         if not os.path.exists(os.path.join(adv_save_dir, "wav")):
