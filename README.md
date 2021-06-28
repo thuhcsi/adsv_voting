@@ -20,8 +20,39 @@ cp -r torch_speaker/{tools,scripts} .
 
 ### stage 1: data preparation
 
+```bash
+rm -rf data; mkdir data
+wget -P data/ https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/veri_test.txt
+echo format trails
+python3 scripts/format_trials.py \
+			--voxceleb1_root $voxceleb1_path \
+			--src_trials_path data/veri_test.txt \
+			--dst_trials_path data/vox1.txt
+```
+
 ### stage 2: ASV model evaluation
+
+```bash
+python3 tools/evaluate.py \
+			--config config/voting.yaml \
+			--trial_path data/vox1.txt \
+			--checkpoint_path $checkpoint_path
+```
 
 ### stage 3: adversarial attack and examples generation
 
+```bash
+python3 local/attack.py \
+			--config config/voting.yaml \
+			--trial_path data/vox1.txt \
+			--checkpoint_path $checkpoint_path
+```
+
 ### stage 4: voting for the defense
+
+```bash
+python3 local/defense.py \
+			--config config/voting.yaml \
+			--trial_path data/vox1.txt \
+			--checkpoint_path $checkpoint_path
+```
