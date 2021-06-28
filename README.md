@@ -20,7 +20,7 @@ cp -r torch_speaker/{tools,scripts} .
 
 ## experiments
 
-stage 1: data preparation
+***stage 1: data preparation***
 
 ```bash
 rm -rf data; mkdir data
@@ -32,7 +32,7 @@ python3 scripts/format_trials.py \
 			--dst_trials_path data/vox1.txt
 ```
 
-stage 2: ASV model evaluation in raw audio
+***stage 2: ASV model evaluation in raw audio***
 
 ```bash
 python3 tools/evaluate.py \
@@ -41,7 +41,7 @@ python3 tools/evaluate.py \
 			--checkpoint_path $checkpoint_path
 ```
 
-stage 3: adversarial attack and examples generation
+***stage 3: adversarial attack and examples generation***
 
 ```bash
 python3 local/attack.py \
@@ -50,7 +50,7 @@ python3 local/attack.py \
 			--checkpoint_path $checkpoint_path
 ```
 
-stage 4: ASV model evaluation in adversarial examples
+***stage 4: ASV model evaluation in adversarial examples***
 
 ```bash
 python3 tools/evaluate.py \
@@ -59,11 +59,24 @@ python3 tools/evaluate.py \
 			--checkpoint_path $checkpoint_path
 ```
 
-stage 5: voting for the defense
+***stage 5: voting for the defense***
 
 ```bash
 python3 local/defense.py \
 			--config config/voting.yaml \
 			--trial_path data/vox1.txt \
 			--checkpoint_path $checkpoint_path
+```
+
+## Citation
+
+Please cite our paper if you make use of the code.
+
+```
+@article{wu2021voting,
+	title={Voting for the right answer: Adversarial defense for speaker verification},
+	author={Wu, Haibin and Zhang, Yang and Wu, Zhiyong and Wang, Dong and Lee, Hung-yi},
+	booktitle={Interspeech},
+	year={2021}
+}
 ```
