@@ -22,12 +22,12 @@ feature:
         n_fft: 512
         win_length: 400
         hop: 160
-        n_mels: 64
+        n_mels: 80
 backbone: 
         name: "resnet34"
         embedding_dim: 256
         num_channels: [1, 32, 64, 128, 256]
-        n_mels: 64
+        n_mels: 80
         pooling_type: "TSP"
 loss:
         name: "amsoftmax"

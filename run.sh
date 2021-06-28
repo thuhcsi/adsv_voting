@@ -4,7 +4,7 @@ export CUDA_VISIBLE_DEVICES=0
 voxceleb1_path=~/datasets/VoxCeleb/voxceleb1
 checkpoint_path=ckpt.pt
 
-stage=2
+stage=3
 
 if [ $stage -eq 1 ];then
 	rm -rf data; mkdir data

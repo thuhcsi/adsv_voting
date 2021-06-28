@@ -1,20 +1,23 @@
+import os
 from argparse import ArgumentParser
+import numpy as np
 import torch
+from tqdm import tqdm
 from scipy.io import wavfile
 
 from torch_speaker.utils import cfg, load_config
 from torch_speaker.module import Task
-from torch.score import compute_eer
+from torch_speaker.score import compute_eer
 
-def load_wav(path):
+def load_wav(path, device="cuda"):
     sample_rate, audio = wavfile.read(path)
     audio = torch.FloatTensor(audio)
-    if self.device == "cuda":
+    if device == "cuda":
         audio = audio.cuda()
-    return sample_rate, audio
+    return sample_rate, audio.unsqueeze(0)
 
 class Adversarial_Attack_Helper(object):
-    def __init__(self, model, alpha=3.0, restarts=1, num_iters=5, epsilon=15, 
+    def __init__(self, model, alpha=3.0, restarts=1, num_iters=5, epsilon=15, trial_path="trials.txt",
             adv_save_dir="data/adv_data/", device="cuda"):
         self.model = model
         self.alpha = alpha
@@ -22,6 +25,8 @@ class Adversarial_Attack_Helper(object):
         self.num_iters = num_iters
         self.epsilon = epsilon
         self.adv_save_dir = adv_save_dir
+        self.trial_path = trial_path
+        self.trials = np.loadtxt(trial_path, str)
         self.adv_trials_path = os.path.join(adv_save_dir, "adv_trials.lst")
         self.device = device
 
@@ -62,14 +67,14 @@ class Adversarial_Attack_Helper(object):
             alpha = self.alpha*(1.0)
 
         # extract enroll speaker embedding
-        enroll_embedding = self.model.extract_speaker_embedding(enroll_wav).squeeze(0)
+        enroll_embedding = self.model.extract_embedding(enroll_wav).squeeze(0)
 
         for i in range(self.restarts):
             delta = torch.zeros_like(test_wav, requires_grad=True).cuda()
             for t in range(self.num_iters):
                 # extract test speaker embedding
                 input_wav = test_wav+delta
-                test_embedding = self.model.extract_speaker_embedding(input_wav).squeeze(0)
+                test_embedding = self.model.extract_embedding(input_wav).squeeze(0)
                 # cosine score
                 score = enroll_embedding.dot(test_embedding.T)
                 denom = torch.norm(enroll_embedding) * torch.norm(test_embedding)
@@ -80,7 +85,7 @@ class Adversarial_Attack_Helper(object):
                 delta.data = (delta + alpha*delta.grad.detach().sign()).clamp(-1*self.epsilon, self.epsilon)
                 delta.grad.zero_()
 
-            test_embedding = self.model.extract_speaker_embedding(test_wav+delta).squeeze(0)
+            test_embedding = self.model.extract_embedding(test_wav+delta).squeeze(0)
             final_score = enroll_embedding.dot(test_embedding.T)
             denom = torch.norm(enroll_embedding) * torch.norm(test_embedding)
             final_score = final_score/denom
@@ -100,7 +105,7 @@ class Adversarial_Attack_Helper(object):
         # save attack test wav
         idx = '%08d' % idx
         adv_test_path = os.path.join(self.adv_save_dir, "wav", idx+".wav")
-        wavfile.write(adv_test_path, samplerate, adv_wav.astype(np.int16))
+        wavfile.write(adv_test_path, samplerate, adv_wav[0].astype(np.int16))
         return label, enroll_path, adv_test_path, final_score
 
 
@@ -141,8 +146,8 @@ if __name__ == "__main__":
         print("initial parameter from pretrain model {}".format(cfg.checkpoint_path))
         print("keep_loss_weight {}".format(cfg.keep_loss_weight))
 
-    helper = Adversarial_Attack_Helper(model, args.alpha, args.restarts, 
-            args.num_iters, args.epsilon, args.adv_save_dir, args.device)
+    helper = Adversarial_Attack_Helper(model, args.alpha, args.restarts, args.num_iters, 
+            args.epsilon, args.trial_path, args.adv_save_dir, args.device)
     helper.attack()
 
 

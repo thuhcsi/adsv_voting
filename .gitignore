@@ -1,4 +1,8 @@
+exp
+ckpt.pt
 torch_speaker
+data
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
