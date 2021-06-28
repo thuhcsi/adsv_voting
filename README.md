@@ -1,9 +1,14 @@
 # voting for the right answer
 
-* [audio samples](https://zyzisyz.github.io/voting_audio_samples/)
-* [arxiv paper](https://arxiv.org/abs/2106.07868)
-
+<!-- * [audio samples](https://zyzisyz.github.io/voting_audio_samples/)
+* [arxiv paper](https://arxiv.org/abs/2106.07868) -->
+## framework
+- As shown in the above figure, denoted as the conventional ASV system workflow, we get the ASV score from a piece of single utterance.
+- However, such conventional ASV is highly vulnerable to adversarial samples (you can refer to the [adversarial audio samples](https://zyzisyz.github.io/voting_audio_samples/)) which are very similar to their original counterparts from human's perception, yet will manipulate the ASV render wrong prediction.
+- In order to improve the adversarial robustness of such conventional ASV system, we propose the idea of "voting for the right answer" to prevent risky decisions of ASV in blind spot areas, by employing random sampling neibours around the testing utterance and letting them vote for the right answer.
+- [arxiv paper](https://arxiv.org/abs/2106.07868)
 ![](docs/workflow.png)
+
 
 ## installation
 
