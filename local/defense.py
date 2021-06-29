@@ -60,7 +60,7 @@ def gaussian_voting_defense(trials, model, epsilon, num_voting=10, score_save_pa
             for idx, item in enumerate(res):
                 for val in item:
                     f.write(str(val) + " ")
-                        f.write("\n")
+                f.write("\n")
     return res
 
 
