@@ -122,7 +122,6 @@ if __name__ == "__main__":
     parser.add_argument('--adv_save_dir', help='', type=str, default="data/adv_data/")
     parser.add_argument('--device', help='', type=str, default="cuda")
 
-
     args = parser.parse_args()
     load_config(cfg, args.config)
     cfg.trainer.gpus = 1

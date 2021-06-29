@@ -2,9 +2,12 @@ import os
 import argparse
 import torch
 import numpy as np
+from tqdm import tqdm
+from scipy.io import wavfile
 
 from torch_speaker.utils import cfg, load_config
 from torch_speaker.module import Task
+from torch_speaker.score import compute_eer
 
 def load_wav(path, device="cuda"):
     sample_rate, audio = wavfile.read(path)
@@ -42,7 +45,7 @@ def gaussian_voting_defense(trials, model, epsilon, num_voting=10, score_save_pa
             res_item.append(score)
 
             # score with guassion noise
-            test_wav = test_wav.unsqueeze(0).repeat(num_voting, 1)
+            test_wav = test_wav.repeat(num_voting, 1)
             gaussian_nosie = torch.randn_like(test_wav) * epsilon
 
             test_embeddings = model.extract_embedding(test_wav+gaussian_nosie)
@@ -71,6 +74,7 @@ if __name__ == "__main__":
     parser.add_argument('--checkpoint_path', type=str, help='checkpoint file path', default=None)
     parser.add_argument('--trial_path', type=str, help='trial file path', default=None)
 
+    parser.add_argument('--score_save_path', help='', type=str, default="score.txt")
     parser.add_argument('--epsilon', help='', type=int, default=5)
     parser.add_argument('--num_voting', help='', type=int, default=10)
     parser.add_argument('--device', help='', type=str, default="cuda")
@@ -99,6 +103,11 @@ if __name__ == "__main__":
         print("keep_loss_weight {}".format(cfg.keep_loss_weight))
 
     trials = np.loadtxt(args.trial_path, str)
-    gaussian_voting_defense(trials, model, args.epsilon, args.num_voting, args.score_save_path)
-
+    res = gaussian_voting_defense(trials, model, args.epsilon, args.num_voting, args.score_save_path)
+    res = np.array(res, dtype=float)
+    labels = res.T[0]
+    scores = np.mean(res.T[1:], axis=0)
+    print(scores.shape)
+    eer, th = compute_eer(labels, scores)
+    print("EER: {:.3f} %".format(eer*100))
 

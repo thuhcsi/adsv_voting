@@ -4,7 +4,7 @@ export CUDA_VISIBLE_DEVICES=0
 voxceleb1_path=~/datasets/VoxCeleb/voxceleb1
 checkpoint_path=ckpt.pt
 
-stage=4
+stage=5
 
 if [ $stage -eq 1 ];then
 	rm -rf data; mkdir data
@@ -45,6 +45,10 @@ if [ $stage -eq 5 ];then
 	python3 local/defense.py \
 		--config config/voting.yaml \
 		--trial_path data/vox1.txt \
-		--checkpoint_path $checkpoint_path
+		--checkpoint_path $checkpoint_path \
+		--trial_path data/adv_3_5/adv_trials.txt \
+		--score_save_path data/adv_3_5/score.txt \
+		--epsilon 30 \
+		--num_voting 20
 fi
 
